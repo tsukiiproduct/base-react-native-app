@@ -1,39 +1,56 @@
-// Simple Express backend used by the React Native starter app.
-// Runs on port 5000 by default. Override with the PORT env var if needed.
+// Express entry point. Wires together config, middleware, and routes.
+// Kept as the project's "main" so existing scripts (npm start / dev) keep working.
 
 const express = require('express');
 const cors = require('cors');
 
-const app = express();
-const PORT = process.env.PORT || 5000;
+const env = require('./src/config/env');
+const logger = require('./src/middleware/logger');
+const errorHandler = require('./src/middleware/errorHandler');
+const apiRouter = require('./src/routes');
 
-// Allow cross-origin requests so the mobile app (and a browser) can call the API.
+const app = express();
+
+// Global middleware
 app.use(cors());
 app.use(express.json());
+app.use(logger);
 
-// Root route — quick sanity check from a browser.
+// Quick sanity-check root
 app.get('/', (req, res) => {
-  res.send('Backend is running. Try /api/health or /api/message.');
+  res.send(
+    'Backend is running. Try /api/health, /api/message, /api/config, /api/profile, /api/settings.'
+  );
 });
 
-// Health check route — used by tooling / smoke tests.
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', uptime: process.uptime() });
+// All API routes live under /api
+app.use('/api', apiRouter);
+
+// 404 for any unmatched route
+app.use((req, res, next) => {
+  const err = new Error('Not found: ' + req.method + ' ' + req.originalUrl);
+  err.statusCode = 404;
+  err.code = 'NOT_FOUND';
+  next(err);
 });
 
-// Main message route — this is what the mobile app calls when the user
-// presses the "Call Backend" button.
-app.get('/api/message', (req, res) => {
-  res.json({ message: 'Hello from the backend!' });
-});
+// Centralized error handler (last)
+app.use(errorHandler);
 
-app.listen(PORT, () => {
+app.listen(env.PORT, () => {
+  // eslint-disable-next-line no-console
   console.log('---------------------------------------------');
-  console.log(`Backend running on http://localhost:${PORT}`);
-  console.log(`Android emulator URL: http://10.0.2.2:${PORT}`);
+  console.log('Backend running on http://localhost:' + env.PORT);
+  console.log('Android emulator URL: http://10.0.2.2:' + env.PORT);
+  console.log('Environment: ' + env.NODE_ENV);
   console.log('Available routes:');
-  console.log('  GET /');
-  console.log('  GET /api/health');
-  console.log('  GET /api/message');
+  console.log('  GET  /');
+  console.log('  GET  /api/health');
+  console.log('  GET  /api/message');
+  console.log('  GET  /api/config');
+  console.log('  GET  /api/profile');
+  console.log('  PUT  /api/profile');
+  console.log('  GET  /api/settings');
+  console.log('  PUT  /api/settings');
   console.log('---------------------------------------------');
 });
