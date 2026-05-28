@@ -1,19 +1,20 @@
-// Pure visual splash. NOT registered as a stack screen — RootNavigator
-// renders this directly (outside any navigator) while the app bootstraps.
-// When AuthContext flips isBootstrapping to false, RootNavigator swaps to
-// the Auth or Main stack on its own.
+// Pure visual splash. Rendered directly by RootNavigator while bootstrapping.
 
 import React from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { Logo } from '../components';
 import { useTheme } from '../theme';
 
 export const SplashScreen: React.FC = () => {
   const theme = useTheme();
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <Text style={[theme.typography.h1, { color: theme.colors.textPrimary }]}>RN Starter</Text>
-      <Text style={[theme.typography.body, { color: theme.colors.textSecondary, marginTop: 8, marginBottom: 32 }]}>
-        Loading…
+      <Logo size={112} />
+      <Text style={[theme.typography.h1, styles.title, { color: theme.colors.textPrimary }]}>
+        RN Starter
+      </Text>
+      <Text style={[theme.typography.body, { color: theme.colors.textSecondary, marginBottom: theme.spacing['2xl'] }]}>
+        Loading your experience…
       </Text>
       <ActivityIndicator size="large" color={theme.colors.primary} />
     </View>
@@ -22,4 +23,5 @@ export const SplashScreen: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: { flex: 1, alignItems: 'center', justifyContent: 'center' },
+  title: { marginTop: 24, marginBottom: 4 },
 });

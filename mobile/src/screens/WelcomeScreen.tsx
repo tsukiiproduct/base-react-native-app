@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Screen, Button } from '../components';
+import { Screen, Button, Logo } from '../components';
 import { useTheme } from '../theme';
 import type { AuthScreenProps } from '../navigation/types';
 
@@ -10,8 +10,17 @@ export const WelcomeScreen: React.FC<AuthScreenProps<'Welcome'>> = ({ navigation
     <Screen>
       <View style={styles.container}>
         <View style={styles.hero}>
-          <Text style={[theme.typography.h1, { color: theme.colors.textPrimary }]}>Welcome</Text>
-          <Text style={[theme.typography.bodyLg, { color: theme.colors.textSecondary, marginTop: theme.spacing.sm }]}>
+          <Logo size={96} />
+          <Text style={[theme.typography.h1, styles.title, { color: theme.colors.textPrimary }]}>
+            Welcome
+          </Text>
+          <Text
+            style={[
+              theme.typography.bodyLg,
+              styles.subtitle,
+              { color: theme.colors.textSecondary },
+            ]}
+          >
             A clean React Native starter to build from.
           </Text>
         </View>
@@ -25,6 +34,15 @@ export const WelcomeScreen: React.FC<AuthScreenProps<'Welcome'>> = ({ navigation
             onPress={() => navigation.navigate('Register')}
             style={{ marginTop: theme.spacing.md }}
           />
+          <Text
+            style={[
+              theme.typography.caption,
+              styles.legal,
+              { color: theme.colors.textMuted },
+            ]}
+          >
+            By continuing you agree to the placeholder Terms and Privacy Policy.
+          </Text>
         </View>
       </View>
     </Screen>
@@ -33,6 +51,9 @@ export const WelcomeScreen: React.FC<AuthScreenProps<'Welcome'>> = ({ navigation
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'space-between' },
-  hero: { alignItems: 'flex-start', marginTop: 48 },
+  hero: { alignItems: 'center', marginTop: 64 },
+  title: { marginTop: 24, marginBottom: 8 },
+  subtitle: { textAlign: 'center', paddingHorizontal: 24 },
   actions: { paddingBottom: 16 },
+  legal: { textAlign: 'center', marginTop: 16, paddingHorizontal: 24 },
 });

@@ -8,4 +8,5 @@ export { Modal } from './Modal';
 export { Loading } from './Loading';
 export { EmptyState } from './EmptyState';
 export { Divider } from './Divider';
+export { Logo } from './Logo';
 export { ToastProvider, useToast } from './Toast';
